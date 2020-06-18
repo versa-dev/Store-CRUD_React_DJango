@@ -22,3 +22,5 @@ class Products(models.Model):
             orginal_stock = Category.objects.filter(pk=self.category_id)[0].stock
             Category.objects.filter(pk=self.category_id).update(stock=orginal_stock+1)
         super().save(*args, **kwargs)
+    
+
