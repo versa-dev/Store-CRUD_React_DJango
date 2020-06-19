@@ -3,7 +3,7 @@ import { MDBRow } from 'mdbreact';
 
 const Home = () => {
     return (
-        <div style={{"margin-top":"60px"}}>
+        <div>
             <h1>This is the home page</h1>
         </div>
     )

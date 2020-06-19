@@ -5,7 +5,7 @@ import { MDBContainer, MDBAlert } from 'mdbreact';
 
 const Alert = ({alerts}) => alerts!== null && alerts.length>0 && alerts.map(alert=>{
     return (
-        <div style={{"margin-top":"60px"}}>
+        <div>
             <MDBAlert key={alert.id} color = {alert.alertType}>
                 {alert.msg}
             </MDBAlert>

@@ -17,7 +17,10 @@ import PropTypes from 'prop-types';
 import { login } from '../actions/auth';
 import styles from './Login.module.css';
 
+
+
 const Login = ({login,isAuthenticated}) => {
+  
   const [formData, setFormData] = useState({
       email: '',
       password: ''
@@ -33,7 +36,7 @@ const Login = ({login,isAuthenticated}) => {
       login(email, password);
   }
   if (isAuthenticated)
-      return <Redirect to='/' />
+      return <Redirect to='/main' />
   return (
     <MDBContainer >
       <MDBRow >

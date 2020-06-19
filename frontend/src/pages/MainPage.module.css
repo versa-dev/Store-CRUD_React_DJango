@@ -1,0 +1,82 @@
+.tab_header {
+    position: relative;
+    z-index: 1;
+    padding: .7rem;
+    margin-top: 20px;
+    margin-right: 1rem;
+    margin-bottom: -20px;
+    margin-left: 1rem;
+    background-color: #2bbbad;
+    border: 0;
+    border-radius: .25rem;
+    -webkit-box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+    background-color: #3f51b5 !important;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+.tab_link {
+    display: block !important;
+    padding: .5rem 1rem !important;
+    color: white;
+}
+.tab_link:hover {
+    color: white;
+}
+.tab_link:active {
+    color: #fff;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: .25rem;
+    -webkit-transition: all 1s;
+    transition: all 1s;
+}
+.tab_item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    margin-bottom: -1px;
+    flex-basis: 0;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    text-align: center;
+}
+.tab_item:active {
+    background-color: rgba(0,0,0,0.2);
+}
+.tab_item:visited {
+    background-color: rgba(0,0,0,0.2) !important;
+}
+.tab_content {
+    padding-top: 3rem !important;
+    padding: 1rem;
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,0.125);
+    border-radius: .25rem;
+    margin-top: -10px;
+    min-height: 600px;
+}
+.act {
+    color: #fff;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: .25rem;
+    -webkit-transition: all 1s;
+    transition: all 1s;
+}

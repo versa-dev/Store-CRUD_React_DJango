@@ -42,7 +42,6 @@ const Header = ({ auth: { isAuthenticated, loading }, logout }) => {
           </MDBCollapse>
         </MDBNavbar>
       </header>
-      <Alert />
     </div>
   );
 }

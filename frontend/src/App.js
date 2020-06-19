@@ -6,8 +6,9 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import Layout from './hoc/Layout';
 import Home from './pages/Home';
+import MainPage from './pages/MainPage';
 import store from './store';
-
+import PrivateRoute from './components/PrivateRoute';
 
 
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
             <Route exact path="/" component={Home} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/login" component={Login} />
+            <PrivateRoute exact path="/main" component={MainPage} />
           </Switch>
         </Layout>
       </Router>

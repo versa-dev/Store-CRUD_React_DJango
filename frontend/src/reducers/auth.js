@@ -9,10 +9,11 @@ import {
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated:null,
-    loading: false
+    loading: false,
+    is_staff: false,
 };
 export default function(state, action){
-    debugger
+ 
     if(state === undefined) {
         state = initialState;
     }
@@ -25,7 +26,8 @@ export default function(state, action){
                 ...state,
                 isAuthenticated: true,
                 loading: false,
-                token: payload.access
+                token: payload.access,
+                is_staff: payload.is_staff
             }
         case SIGNUP_SUCCESS: 
             return {
@@ -36,7 +38,7 @@ export default function(state, action){
         // case SIGNUP_FAIL:   
         // case LOGIN_FAIL:
         case LOGOUT:
-            debugger
+            
             localStorage.removeItem('token');
             return {
                 ...state,
