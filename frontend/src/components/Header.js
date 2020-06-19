@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBCollapse, MDBNavItem, MDBNavLink, MDBRow } from 'mdbreact';
 import { connect } from 'react-redux';
 import { logout } from '../actions/auth';
@@ -6,9 +6,15 @@ import PropTypes from 'prop-types';
 import Alert from './Alert';
 
 
-const Header = ({ auth: { isAuthenticated, loading }, logout }) => {
+const Header = ({ logout }) => {
   const bgPink = { backgroundColor: '#e91e63' }
   const container = { height: 1300 }
+  let isAuthenticated;
+  useEffect(() => {
+    isAuthenticated = (localStorage.getItem('token')!==null);
+    console.log(isAuthenticated);
+  });
+
   return (
     <div>
       <header>
@@ -48,9 +54,9 @@ const Header = ({ auth: { isAuthenticated, loading }, logout }) => {
 
 Header.propTypes = {
   logout: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  // auth: PropTypes.object.isRequired
 }
-const mapStateToProps = state => ({
-  auth: state.auth
-})
-export default connect(mapStateToProps, { logout })(Header);
+// const mapStateToProps = state => ({
+//   auth: state.auth
+// })
+export default connect(null, { logout })(Header);

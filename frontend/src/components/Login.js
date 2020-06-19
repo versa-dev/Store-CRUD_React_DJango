@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBContainer,
   MDBRow,
@@ -35,6 +35,10 @@ const Login = ({login,isAuthenticated}) => {
       e.preventDefault();
       login(email, password);
   }
+
+  useEffect(()=>{
+    isAuthenticated = isAuthenticated || (localStorage.getItem('token'))
+  })
   if (isAuthenticated)
       return <Redirect to='/main' />
   return (

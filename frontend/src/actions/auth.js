@@ -62,6 +62,5 @@ export const logout = () => dispatch => {
     dispatch(setAlert('Error Authenticating','warning'));
     dispatch({
         type:LOGOUT
-    });
-    
+    });    
 }

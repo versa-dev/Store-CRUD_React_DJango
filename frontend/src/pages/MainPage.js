@@ -1,16 +1,21 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { MDBContainer, MDBRow, MDBCol, MDBTabPane, MDBTabContent, MDBNav, MDBNavItem, MDBNavLink, MDBIcon } from
     "mdbreact";
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import styles from './MainPage.module.css';
-import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import Users from './Users';
+import Products from './Products';
+import Contact from './Contact';
 
 const MainPage = ({ is_staff }) => {
 
     const [activeItemJustified, setActiveItemJustified] = useState("1");
-
+    
+    useEffect(()=>{
+        is_staff = is_staff || (localStorage.getItem('is_staff')==='true')
+    },[])
     const toggleJustified = tab => e => {
         if (activeItemJustified !== tab) {
             setActiveItemJustified(tab)
@@ -28,7 +33,7 @@ const MainPage = ({ is_staff }) => {
                             </MDBNavLink>
                         </MDBNavItem>
                         :
-                        null
+                    null
                 }
                 <MDBNavItem className={styles.tab_item}>
                     <MDBNavLink className={activeItemJustified === "2" ? styles.act : styles.tab_link} to="#" active={activeItemJustified === "2"} onClick={toggleJustified("2")} role="tab" >
@@ -48,22 +53,16 @@ const MainPage = ({ is_staff }) => {
                 {
                     is_staff ?
                         <MDBTabPane tabId="1" role="tabpanel">
-                            <p className="mt-2">
-                                User Management
-                            </p>
+                            <Users />
                         </MDBTabPane>
                     :
                     null
                 }
                 <MDBTabPane tabId="2" role="tabpanel">
-                    <p className="mt-2">
-                        This is products page.
-                    </p>
+                    <Products />
                 </MDBTabPane>
                 <MDBTabPane tabId="3" role="tabpanel">
-                    <p className="mt-2">
-                        Contact pages
-                    </p>
+                    <Contact />
                 </MDBTabPane>
             </MDBTabContent>
         </MDBContainer>

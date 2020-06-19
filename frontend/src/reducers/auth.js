@@ -22,6 +22,10 @@ export default function(state, action){
     switch(type){
         case LOGIN_SUCCESS:
             localStorage.setItem('token',payload.access);
+            if(payload.is_staff) 
+                localStorage.setItem('is_staff','true');
+            else
+                localStorage.setItem('is_staff','false');
             return {
                 ...state,
                 isAuthenticated: true,
@@ -38,7 +42,7 @@ export default function(state, action){
         // case SIGNUP_FAIL:   
         // case LOGIN_FAIL:
         case LOGOUT:
-            
+            localStorage.removeItem('is_staff');
             localStorage.removeItem('token');
             return {
                 ...state,
