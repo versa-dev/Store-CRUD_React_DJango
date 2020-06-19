@@ -23,6 +23,7 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 
 @api_view(['GET',])
 def filter_products(request,pk):
+    
     try:
         products = Products.objects.filter(category_id=pk)
     except Products.DoesNotExist:
