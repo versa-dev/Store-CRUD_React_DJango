@@ -4,6 +4,9 @@ User = get_user_model()
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import permissions, generics, status
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 from .models import UserAccount
 from .serializers import AccountSerializers
@@ -33,6 +36,20 @@ class SignupView(APIView):
                     return Response({'success':'User created successfully'})
         else:
             return Response({'error':'Passwords do not match'})
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+
+        # Add extra responses here
+        data['is_staff'] = self.user.is_staff
+        return data
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 class AccountListView(APIView):
     permission_classes = [permissions.IsAuthenticated, IsStaffOnly]
