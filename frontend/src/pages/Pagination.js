@@ -52,6 +52,5 @@ Pagination.propTypes = {
     visitPage: PropTypes.func.isRequired,
     previous: PropTypes.func.isRequired,
     next: PropTypes.func.isRequired
-
 }
 export default Pagination;

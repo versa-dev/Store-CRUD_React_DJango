@@ -1,42 +1,13 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import {
     MDBCard, MDBCardBody, MDBCardText, MDBBtn, MDBCardTitle, MDBBadge,
     MDBIcon, MDBInput, MDBRow
 } from 'mdbreact';
+import axios from 'axios';
 
 import styles from './Products.module.css';
 import Pagination from './Pagination';
 
-const data = [
-    {
-        "id": 1,
-        "name": "Football Shoe",
-        "price": 89.99,
-        "description": "Best football shoes ever",
-        "category": "shoes"
-    },
-    {
-        "id": 2,
-        "name": "Volleyball shoes",
-        "price": 149.99,
-        "description": "Best football shoes ever",
-        "category": "wears"
-    },
-    {
-        "id": 3,
-        "name": "Football Shoe",
-        "price": 199.99,
-        "description": "Best football shoes ever",
-        "category": "rats"
-    },
-    {
-        "id": 4,
-        "name": "Volleyball shoes",
-        "price": 249.99,
-        "description": "Best football shoes ever",
-        "category": "insturument"
-    },
-]
 
 
 const Products = () => {
@@ -45,6 +16,72 @@ const Products = () => {
 
     const [editToggle, setEditToggle] = useState(-1);
     const editClick = (id) => { setEditToggle(id) };
+
+    ///--------------- For pagination and display users-------------///
+    const [products, setProducts] = useState([]);
+    const [count, setCount] = useState(0);
+    const [previous, setPrevious] = useState('');
+    const [next, setNext] = useState('');
+    const [active, setActive] = useState(1);
+
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    };
+    useEffect(() => {
+        window.scrollTo(0,0);
+        
+        const fetchData = async() => {
+            try {
+                const res = await axios.get('/api/products', config);
+                setProducts(res.data.results);
+                setCount(res.data.count);
+                setPrevious(res.data.previous);
+                setNext(res.data.next);
+            }
+            catch (err) {
+
+            }
+        }
+        fetchData();
+    },[])
+    const previous_number = () => {
+        axios.get(previous, config)
+        .then(res => {
+            setProducts(res.data.results);
+            setPrevious(res.data.previous);
+            setNext(res.data.next);
+            if (previous)
+                setActive(active-1);
+        })
+        .catch(err => {
+
+        })
+    };
+    const next_number = () => {
+        axios.get(next, config)
+        .then(res => {
+            setProducts(res.data.results);
+            setPrevious(res.data.previous);
+            setNext(res.data.next);
+            if (next)
+                setActive(active+1);
+        })
+        .catch(err => {
+            
+        })
+    }
+    const visitPage = (page) => {
+        axios.get(`/api/products/?page=${page}`,config)
+        .then(res => {
+            setProducts(res.data.results);
+            setPrevious(res.data.previous);
+            setNext(res.data.next);
+            setActive(page);
+        })
+        .catch(err => {});
+    };
 
     const options = [
         {
@@ -62,7 +99,7 @@ const Products = () => {
     ]
     return (
         <div>
-            <MDBBtn> 100 Products</MDBBtn>
+            <MDBBtn> {count} Products</MDBBtn>
             <MDBBtn onClick={addClick}><MDBIcon icon="plus-circle" /> Add New Product </MDBBtn>
             {
                 addToggle ?
@@ -84,9 +121,17 @@ const Products = () => {
                     :
                     null
             }
-            <Pagination />
+            <Pagination 
+                itemsPerPage = {5}
+                count = {count}
+                visitPage = {visitPage}
+                previous = {previous_number}
+                next = {next_number}
+                active = {active}
+                setActive = {setActive}
+            />
             {
-                data.map(producut => {
+                products.map(producut => {
                     return (
                         <div>
                             {

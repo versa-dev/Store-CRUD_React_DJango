@@ -1,4 +1,5 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment , useEffect } from 'react';
+import axios from 'axios';
 import {
     MDBBtn,
     MDBTable,
@@ -16,38 +17,7 @@ import {
 import styles from './Users.module.css';
 import Pagination from './Pagination';
 
-const users = [
-    {
-        "id": 1,
-        "name": "user",
-        "email": "user@gmail.com"
-    },
-    {
-        "id": 2,
-        "name": "testuser",
-        "email": "testuser@gmail.com"
-    },
-    {
-        "id": 3,
-        "name": "user",
-        "email": "user@gmail.com"
-    },
-    {
-        "id": 4,
-        "name": "testuser",
-        "email": "testuser@gmail.com"
-    },
-    {
-        "id": 5,
-        "name": "user",
-        "email": "user@gmail.com"
-    },
-    {
-        "id": 6,
-        "name": "testuser",
-        "email": "testuser@gmail.com"
-    }
-]
+
 const Users = () => {
     const [toggle, setToggle] = useState(false);
 
@@ -68,6 +38,71 @@ const Users = () => {
         [e.target.name]: e.target.value
     })
 
+    ///--------------- For pagination and display users-------------///
+    const [users, setUsers] = useState([]);
+    const [count, setCount] = useState(0);
+    const [previous, setPrevious] = useState('');
+    const [next, setNext] = useState('');
+    const [active, setActive] = useState(1);
+
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    };
+    useEffect(() => {
+        window.scrollTo(0,0);
+        
+        const fetchData = async() => {
+            try {
+                const res = await axios.get('/api/accounts/users', config);
+                setUsers(res.data.results);
+                setCount(res.data.count);
+                setPrevious(res.data.previous);
+                setNext(res.data.next);
+            }
+            catch (err) {
+
+            }
+        }
+        fetchData();
+    },[])
+    const previous_number = () => {
+        axios.get(previous, config)
+        .then(res => {
+            setUsers(res.data.results);
+            setPrevious(res.data.previous);
+            setNext(res.data.next);
+            if (previous)
+                setActive(active-1);
+        })
+        .catch(err => {
+
+        })
+    };
+    const next_number = () => {
+        axios.get(next, config)
+        .then(res => {
+            setUsers(res.data.results);
+            setPrevious(res.data.previous);
+            setNext(res.data.next);
+            if (next)
+                setActive(active+1);
+        })
+        .catch(err => {
+            
+        })
+    }
+    const visitPage = (page) => {
+        axios.get(`/api/accounts/users/?page=${page}`,config)
+        .then(res => {
+            setUsers(res.data.results);
+            setPrevious(res.data.previous);
+            setNext(res.data.next);
+            setActive(page);
+        })
+        .catch(err => {});
+    };
     return (
         <div>
             <MDBBtn rounded color="success" className={styles.addbtn} onClick={toggleModal}><MDBIcon icon="plus-circle" />&nbsp;&nbsp;Add new user</MDBBtn>
@@ -77,7 +112,7 @@ const Users = () => {
                         <th>id</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th style={{ textAlign: "center" }}>Action</th>
+                        <th>Action</th>
                     </tr>
                 </MDBTableHead>
                 <MDBTableBody>
@@ -116,7 +151,15 @@ const Users = () => {
                     })}
                 </MDBTableBody>
                 <MDBTableFoot>
-                    <Pagination />
+                    <Pagination 
+                        itemsPerPage = {5}
+                        count = {count}
+                        visitPage = {visitPage}
+                        previous = {previous_number}
+                        next = {next_number}
+                        active = {active}
+                        setActive = {setActive}
+                    />
                 </MDBTableFoot>
             </MDBTable>
             <MDBModal isOpen={toggle} toggle={toggleModal}>

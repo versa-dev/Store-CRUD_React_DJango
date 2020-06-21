@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework import permissions, generics, status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from rest_framework.pagination import PageNumberPagination
 
 from .models import UserAccount
 from .serializers import AccountSerializers
@@ -17,7 +17,7 @@ class SignupView(APIView):
 
     def post(self,request,format=None):
         data = self.request.data
-    
+        print(data)
         name = data['name']
         email = data['email']
         password = data['password']
@@ -51,14 +51,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-class AccountListView(APIView):
+class AccountListView(APIView, PageNumberPagination):
     permission_classes = [permissions.IsAuthenticated, IsStaffOnly]
 
     def get(self, request, format=None):
         users = UserAccount.objects.filter(is_staff=False)
-        serializer = AccountSerializers(users, many=True)
-
-        return Response(serializer.data)
+        results = self.paginate_queryset(users, request, view=self)
+        serializer = AccountSerializers(results, many=True)
+        return self.get_paginated_response(serializer.data)
     
     def post(self,request,format=None):
         data = self.request.data

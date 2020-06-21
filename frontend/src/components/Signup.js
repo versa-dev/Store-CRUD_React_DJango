@@ -28,7 +28,7 @@ const Signup = ({ signup, setAlert, isAuthenticated }) => {
         }
         else
         {
-            signup( name, email, password, password2 );
+          signup( name, email, password, password2 );
         }
     };
     if (isAuthenticated)
