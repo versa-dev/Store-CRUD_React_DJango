@@ -5,6 +5,8 @@ import {
 } from 'mdbreact';
 
 import styles from './Products.module.css';
+import Pagination from './Pagination';
+
 const data = [
     {
         "id": 1,
@@ -82,6 +84,7 @@ const Products = () => {
                     :
                     null
             }
+            <Pagination />
             {
                 data.map(producut => {
                     return (

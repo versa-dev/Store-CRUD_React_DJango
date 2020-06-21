@@ -38,7 +38,7 @@ const Category = () => {
                         <MDBInput label="Category Name" outline />
                         <MDBRow className={styles.addrow}>
                             <MDBBtn color="warning" className={styles.editbtn}><MDBIcon far icon="save" />Add</MDBBtn>
-                            <MDBBtn color="danger" className={styles.editbtn}><MDBIcon icon="undo" />Cancel</MDBBtn>
+                            <MDBBtn color="danger" className={styles.editbtn} onClick={()=>setAddToggle(false)}><MDBIcon icon="undo" />Cancel</MDBBtn>
                         </MDBRow>
                     </form>
                 : null 
