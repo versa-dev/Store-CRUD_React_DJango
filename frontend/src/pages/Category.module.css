@@ -1,0 +1,17 @@
+.category_item {
+    background-color: #4B515D;
+    margin-top: 0.3rem;
+    border-radius: 0.5rem;
+    color: white;
+    height: 3rem;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 7px;
+}
+.editbtn {
+    border-radius: 0.1rem !important;
+    padding: 0.3rem 1rem !important;  
+}
+.addrow {
+    margin-left: -5px !important;
+}

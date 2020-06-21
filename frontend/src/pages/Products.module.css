@@ -1,0 +1,16 @@
+.card_item {
+    margin-top: 0.3rem;
+    padding: 5px;
+    padding-left: 10px;
+}
+.badge_item {
+    float: right;
+}
+.editbtn {
+    border-radius: 0.1rem !important;
+    padding: 0.3rem 1rem !important;
+    float: right;
+}
+.addrow {
+    margin-left: -5px !important;
+}

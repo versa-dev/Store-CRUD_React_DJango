@@ -6,15 +6,11 @@ import PropTypes from 'prop-types';
 import Alert from './Alert';
 
 
-const Header = ({ logout }) => {
+const Header = ({ auth: { isAuthenticated, loading }, logout }) => {
   const bgPink = { backgroundColor: '#e91e63' }
   const container = { height: 1300 }
-  let isAuthenticated;
-  useEffect(() => {
-    isAuthenticated = (localStorage.getItem('token')!==null);
-    console.log(isAuthenticated);
-  });
-
+  isAuthenticated = (localStorage.getItem('token')!==null);
+  
   return (
     <div>
       <header>
@@ -54,9 +50,9 @@ const Header = ({ logout }) => {
 
 Header.propTypes = {
   logout: PropTypes.func.isRequired,
-  // auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired
 }
-// const mapStateToProps = state => ({
-//   auth: state.auth
-// })
-export default connect(null, { logout })(Header);
+const mapStateToProps = state => ({
+  auth: state.auth
+})
+export default connect(mapStateToProps, { logout })(Header);

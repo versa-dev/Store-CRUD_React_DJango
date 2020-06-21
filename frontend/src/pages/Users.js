@@ -97,10 +97,9 @@ const Users = () => {
                                     <input value={user.email}/>
                                 }
                             </td>
-                            <td style={{ textAlign: "center" }}>
-                                
+                            <td style={{ alignItems: "center" }}>     
                                 {
-                                    !update ?
+                                    update !== user.id ?
                                     <Fragment>
                                         <MDBBtn color="info" className={styles.editbtn} onClick={()=>toggleUpdate(user.id)}><MDBIcon icon="user-edit" />&nbsp;&nbsp;Edit</MDBBtn>
                                         <MDBBtn color="dark" className={styles.editbtn}><MDBIcon icon="user-minus" />&nbsp;&nbsp;Remove</MDBBtn>
@@ -110,8 +109,7 @@ const Users = () => {
                                         <MDBBtn color="info" className={styles.editbtn} onClick={()=>toggleUpdate(0)}><MDBIcon icon="undo" />&nbsp;&nbsp;Undo</MDBBtn>
                                         <MDBBtn color="warning" className={styles.editbtn}><MDBIcon far icon="save" />&nbsp;&nbsp;Save</MDBBtn>
                                     </Fragment>
-                                }
-                                
+                                }       
                             </td>
                         </tr>)
                     })}

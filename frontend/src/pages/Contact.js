@@ -2,7 +2,7 @@ import React from 'react';
 
 const Contact = () => {
     return(
-        <h1>This is User Contact Page!</h1>
+        <h1>This is sports store app!</h1>
     )
 }
 
