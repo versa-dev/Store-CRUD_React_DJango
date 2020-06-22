@@ -25,6 +25,9 @@ export const login = (email, password) =>async dispatch =>{
             payload: res.data
         });
         dispatch(setAlert('Authentication successful','success'));
+        const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
+        localStorage.setItem("expirationDate", expirationDate);
+        dispatch(checkAuthTimeout(3600));
     } 
     catch(err){
         dispatch({
@@ -58,6 +61,14 @@ export const signup = (name,email,password,password2)=> async dispatch => {
         dispatch(setAlert('Error Authenticating','warning'));
     }
 }
+export const checkAuthTimeout = expirationTime => {
+    return dispatch => {
+      setTimeout(() => {
+        dispatch(logout());
+      }, expirationTime * 1000);
+    };
+  };
+  
 export const logout = () => dispatch => {
     dispatch(setAlert('You logged out!','warning'));
     dispatch({
