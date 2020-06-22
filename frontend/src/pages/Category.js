@@ -15,10 +15,12 @@ const Category = ({update_category, set_category}) => {
         }
     };
     const [data, setData] = useState([]);
+    const [pages, setPages] = useState(0);
     const fetchData = async() => {
         try {
             const res = await axios.get('/api/category/', config);
             setData(res.data.results);
+            update_category(res.data.results);
         }
         catch (err) {
             console.log(err);
@@ -27,7 +29,6 @@ const Category = ({update_category, set_category}) => {
     useEffect(() => {
         window.scrollTo(0,0);  
         fetchData();
-        update_category(data);
     },[])
     const [addToggle, setAddToggle] = useState(false);
     const addClick = () => { setAddToggle(!addToggle) };
@@ -69,7 +70,7 @@ const Category = ({update_category, set_category}) => {
                     </form>
                 : null 
             }
-            <div className={styles.category_item} key={0}>
+            <div className={styles.category_item} key={0} onClick={()=>set_category(0)}>
                 All
             </div>
             {

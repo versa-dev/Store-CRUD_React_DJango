@@ -59,7 +59,7 @@ export const signup = (name,email,password,password2)=> async dispatch => {
     }
 }
 export const logout = () => dispatch => {
-    dispatch(setAlert('Error Authenticating','warning'));
+    dispatch(setAlert('You logged out!','warning'));
     dispatch({
         type:LOGOUT
     });    

@@ -11,12 +11,12 @@ export default function(state = initialState,action){
     const {type, payload} = action;
     switch(type) {
         case SET_CATEGORY:
-            debugger
             return {
                 ...state,
                 category_id: payload
             }
         case UPDATE_CATEGORY:
+            
             return {
                 ...state,
                 category_list:payload
