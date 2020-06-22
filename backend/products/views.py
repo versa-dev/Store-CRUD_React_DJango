@@ -21,17 +21,6 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-@api_view(['GET',])
-def filter_products(request,pk):
-    
-    try:
-        products = Products.objects.filter(category_id=pk)
-    except Products.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND) 
-
-    if request.method == 'GET':    
-        serializer = ProductsSerializer(products,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
 
 
 

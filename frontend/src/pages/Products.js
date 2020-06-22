@@ -252,7 +252,7 @@ const Products = ({ category_id, category_list }) => {
                                         <MDBInput type="textarea" label="Description" outline value={update_description} name="update_description" onChange={onUpdateChange}/>
                                         <MDBRow className={styles.addrow}>
                                             <MDBBtn color="warning" className={styles.editbtn} onClick={onUpdate}><MDBIcon far icon="save" /> Update</MDBBtn>
-                                            <MDBBtn color="danger" className={styles.editbtn} onClick={() => editClick(-1)}><MDBIcon icon="undo" /> Cancel</MDBBtn>
+                                            <MDBBtn color="danger" className={styles.editbtn} onClick={() => setEditToggle(0)}><MDBIcon icon="undo" /> Cancel</MDBBtn>
                                         </MDBRow>
                                     </form>
                             }
