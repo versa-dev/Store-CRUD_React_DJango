@@ -15,12 +15,18 @@ const Category = ({update_category, set_category}) => {
         }
     };
     const [data, setData] = useState([]);
-    const [pages, setPages] = useState(0);
     const fetchData = async() => {
         try {
             const res = await axios.get('/api/category/', config);
-            setData(res.data.results);
-            update_category(res.data.results);
+            let pages = res.data.count;
+            let all = []
+            for (var i = 1; i < pages / 5 + 1; i++){
+                const res1 = await axios.get(`/api/category/?page=${i}`, config)
+                all.push(res1.data.results)
+            }
+            all = [].concat.apply([], all);
+            setData(all);
+            update_category(all);
         }
         catch (err) {
             console.log(err);
@@ -47,9 +53,16 @@ const Category = ({update_category, set_category}) => {
         try{
             const res = await axios.post('/api/category/', body, config);
             setAddToggle(false)
-            const res1 = await axios.get('/api/category/', config);
-            setData(res1.data.results);  
-            update_category(data);  
+            const res2 = await axios.get('/api/category/', config);
+            let pages = res2.data.count;
+            let all = []
+            for (var i = 1; i < pages / 5 + 1; i++){
+                const res1 = await axios.get(`/api/category/?page=${i}`, config)
+                all.push(res1.data.results)
+            }
+            all = [].concat.apply([], all);
+            setData(all);
+            update_category(all);  
         }
         catch(err){
             console.log(err);

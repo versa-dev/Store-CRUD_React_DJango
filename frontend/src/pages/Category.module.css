@@ -8,6 +8,13 @@
     text-align: center;
     padding: 7px;
 }
+.category_item:active {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.category_item:hover {
+    background-color: #00c851;
+}
+
 .editbtn {
     border-radius: 0.1rem !important;
     padding: 0.3rem 1rem !important;  

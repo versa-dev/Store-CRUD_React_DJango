@@ -40,12 +40,12 @@ const Products = ({ category_id, category_list }) => {
                     setPages(res.data.count)
                 }
                 else {
+                
                     let all = []
-                    for (let i = 1; i <= (pages / 5 + 1); i++) {
+                    for (let i = 1; i < (pages / 5 + 1); i++) {
                         const res = await axios.get(`/api/products/?page=${i}`, config)
                         all.push(res.data.results)
                     }
-
                     all = [].concat.apply([], all);
                     let filtered_products = all.filter(function (el) { return el.category === category_id })
                     setProducts(filtered_products)
@@ -224,7 +224,7 @@ const Products = ({ category_id, category_list }) => {
                                         <MDBCardText>
                                             <MDBRow>
                                                 <MDBCol>
-                                                    {producut.description}({producut.category})
+                                                    {producut.description}
                                                 </MDBCol>
                                                 <MDBCol>
                                                     <Fragment className={styles.btngroup}>
@@ -268,7 +268,6 @@ Products.propTypes = {
     category_list: PropTypes.array.isRequired
 }
 const mapStateToProps = (state) => {
-
     return {
         category_id: state.category.category_id,
         category_list: state.category.category_list
