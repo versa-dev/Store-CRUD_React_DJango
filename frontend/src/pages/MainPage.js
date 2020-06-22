@@ -11,7 +11,7 @@ import Contact from './Contact';
 
 const MainPage = ({ is_staff }) => {
 
-    const [activeItemJustified, setActiveItemJustified] = useState("1");
+    const [activeItemJustified, setActiveItemJustified] = useState("2");
     
     is_staff = is_staff || (localStorage.getItem('is_staff')==='true');
     const toggleJustified = tab => e => {
