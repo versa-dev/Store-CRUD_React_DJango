@@ -7,15 +7,16 @@ import {
     MDBTableHead,
     MDBTableFoot,
     MDBIcon,
-    MDBPagination,
-    MDBPageNav,
-    MDBPageItem,
     MDBModal, MDBModalBody, MDBModalHeader, MDBModalFooter,
     MDBInput
 } from 'mdbreact';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import styles from './Users.module.css';
 import Pagination from './Pagination';
+import { signup } from '../actions/auth';
+import { setAlert } from '../actions/alert';
 
 
 const Users = () => {
@@ -26,6 +27,12 @@ const Users = () => {
     const [update, setUpdate] = useState(0);
 
     const toggleUpdate = userid => { setUpdate(userid) };
+    //////----------------For Creation of Users------------------------------////////
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    };
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -37,7 +44,23 @@ const Users = () => {
         ...formData,
         [e.target.name]: e.target.value
     })
-
+    const onSave = async(e) => {
+        e.preventDefault();
+        const body = {
+            name, email, password, password2
+        };
+        if (password !== password2){
+            setAlert('Passwords do not match.', 'warning');
+        }
+        else
+        { 
+            const res = await axios.post('/api/accounts/signup',body,config);
+            toggleModal(false);         
+            const res1 = await axios.get('/api/accounts/users', config);
+            setUsers(res1.data.results);
+            setCount(res1.data.count);
+        }
+    }
     ///--------------- For pagination and display users-------------///
     const [users, setUsers] = useState([]);
     const [count, setCount] = useState(0);
@@ -45,11 +68,7 @@ const Users = () => {
     const [next, setNext] = useState('');
     const [active, setActive] = useState(1);
 
-    const config = {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-    };
+    
     useEffect(() => {
         window.scrollTo(0,0);
         
@@ -103,6 +122,34 @@ const Users = () => {
         })
         .catch(err => {});
     };
+
+    ///--------------------------------- For update-----------------------////
+    const [ updateEmail, setUpdateEmail ] = useState("email");
+    const [ updateName, setUpdateName ] = useState("name");
+    
+    const onChangeName = (e) => {
+        setUpdateName(e.target.value)
+    }
+    const onChangeEmail = (e) => {
+        setUpdateEmail(e.target.value)
+    }
+    const onUpdate = async (e) => {
+        const body = {
+            "name": updateName, "email":updateEmail
+        }
+        const res = await axios.put(`/api/accounts/users/${update}/`, body, config);
+        const res1 = await axios.get('/api/accounts/users', config);
+        toggleUpdate(0);
+        setUsers(res1.data.results);    
+    }
+    ///---------------------------For remove---------------------------------////
+    const onRemove = async(id) => {
+        alert(`Are you sure to remove user ${id}?`);
+        const res = await axios.delete(`/api/accounts/users/${id}/`, config);
+        const res1 = await axios.get('/api/accounts/users', config);
+        setUsers(res1.data.results);  
+        setCount(res1.data.count);  
+    }
     return (
         <div>
             <MDBBtn rounded color="success" className={styles.addbtn} onClick={toggleModal}><MDBIcon icon="plus-circle" />&nbsp;&nbsp;Add new user</MDBBtn>
@@ -123,14 +170,14 @@ const Users = () => {
                                 {update !== user.id ?
                                     user.name
                                 :
-                                    <input value={user.name}/>
+                                <input value={updateName} onChange={onChangeName}/>
                                 }
                             </td>
                             <td>
                                 {update !== user.id ?
                                     user.email
                                 :
-                                    <input value={user.email}/>
+                                <input value={updateEmail} onChange={onChangeEmail}/>
                                 }
                             </td>
                             <td style={{ alignItems: "center" }}>     
@@ -138,12 +185,12 @@ const Users = () => {
                                     update !== user.id ?
                                     <Fragment>
                                         <MDBBtn color="info" className={styles.editbtn} onClick={()=>toggleUpdate(user.id)}><MDBIcon icon="user-edit" />&nbsp;&nbsp;Edit</MDBBtn>
-                                        <MDBBtn color="dark" className={styles.editbtn}><MDBIcon icon="user-minus" />&nbsp;&nbsp;Remove</MDBBtn>
+                                        <MDBBtn color="dark" className={styles.editbtn} onClick={()=>onRemove(user.id)}><MDBIcon icon="user-minus" />&nbsp;&nbsp;Remove</MDBBtn>
                                     </Fragment>
                                     :
                                     <Fragment>
                                         <MDBBtn color="info" className={styles.editbtn} onClick={()=>toggleUpdate(0)}><MDBIcon icon="undo" />&nbsp;&nbsp;Undo</MDBBtn>
-                                        <MDBBtn color="warning" className={styles.editbtn}><MDBIcon far icon="save" />&nbsp;&nbsp;Save</MDBBtn>
+                                        <MDBBtn color="warning" className={styles.editbtn} onClick={onUpdate}><MDBIcon far icon="save"  />&nbsp;&nbsp;Save</MDBBtn>
                                     </Fragment>
                                 }       
                             </td>
@@ -216,11 +263,15 @@ const Users = () => {
                 </MDBModalBody>
                 <MDBModalFooter>
                     <MDBBtn color="secondary" className={styles.editbtn} onClick={toggleModal}>Close</MDBBtn>
-                    <MDBBtn color="primary" className={styles.editbtn}>Save changes</MDBBtn>
+                    <MDBBtn color="primary" className={styles.editbtn} onClick={onSave}>Save changes</MDBBtn>
                 </MDBModalFooter>
             </MDBModal>
         </div>
     )
 }
 
-export default Users;
+Users.propTypes = {
+    signup: PropTypes.func.isRequired,
+    setAlert: PropTypes.func.isRequired
+}
+export default connect(null, {signup, setAlert})(Users);

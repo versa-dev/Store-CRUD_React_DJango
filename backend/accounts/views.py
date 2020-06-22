@@ -17,7 +17,6 @@ class SignupView(APIView):
 
     def post(self,request,format=None):
         data = self.request.data
-        print(data)
         name = data['name']
         email = data['email']
         password = data['password']
