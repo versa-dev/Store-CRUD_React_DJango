@@ -45,6 +45,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         # Add extra responses here
         data['is_staff'] = self.user.is_staff
+        data['is_admin'] = self.user.is_superuser
         return data
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -66,7 +67,7 @@ class AccountListView(APIView, PageNumberPagination):
         email = data['email']
         password = data['password']
         password2 = data['password2']
-
+        is_staff = data['is_staff']
         if password == password2:
             if User.objects.filter(email=email).exists():
                 return Response({'error':'email already exists'})
@@ -74,7 +75,7 @@ class AccountListView(APIView, PageNumberPagination):
                 if len(password)<6:
                     return Response({'error':'Password must be at least 6 characters'})
                 else:
-                    user = User.objects.create_user(email=email,password=password,name=name)
+                    user = User.objects.create_user(email=email,password=password,name=name, is_staff=is_staff)
                     user.save()
 
                     return Response({'success':'User created successfully'})

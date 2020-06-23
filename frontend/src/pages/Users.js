@@ -21,12 +21,8 @@ import { setAlert } from '../actions/alert';
 
 const Users = () => {
     const [toggle, setToggle] = useState(false);
-
     const toggleModal = () => { setToggle(!toggle) };
 
-    const [update, setUpdate] = useState(0);
-
-    const toggleUpdate = userid => { setUpdate(userid) };
     //////----------------For Creation of Users------------------------------////////
     const config = {
         headers: {
@@ -39,7 +35,7 @@ const Users = () => {
         password: '',
         password2: ''
     })
-    const { name, email, password, password2 } = formData;
+    const { name, email, password, password2, checked } = formData;
     const onChange = e => setFormData({
         ...formData,
         [e.target.name]: e.target.value
@@ -47,7 +43,7 @@ const Users = () => {
     const onSave = async(e) => {
         e.preventDefault();
         const body = {
-            name, email, password, password2
+            name, email, password, password2, staff
         };
         if (password !== password2){
             setAlert('Passwords do not match.', 'warning');
@@ -124,6 +120,20 @@ const Users = () => {
     };
 
     ///--------------------------------- For update-----------------------////
+    const [update, setUpdate] = useState(0);
+
+    const toggleUpdate = userid => { 
+        setUpdate(userid);
+        let selected_user = users.filter(function (el) { return el.id === userid })[0];
+        if (selected_user !== undefined){
+            setUpdateEmail(selected_user.email);
+            setUpdateName(selected_user.name);
+            setStaff(selected_user.is_staff);
+        }
+        else
+            selected_user = {"name":"undefined","email":"undefined","is_staff":"undefined"}
+            
+    };
     const [ updateEmail, setUpdateEmail ] = useState("email");
     const [ updateName, setUpdateName ] = useState("name");
     
@@ -135,7 +145,7 @@ const Users = () => {
     }
     const onUpdate = async (e) => {
         const body = {
-            "name": updateName, "email":updateEmail
+            "name": updateName, "email":updateEmail,"is_staff":staff
         }
         const res = await axios.put(`/api/accounts/users/${update}/`, body, config);
         const res1 = await axios.get('/api/accounts/users', config);
@@ -150,6 +160,11 @@ const Users = () => {
         setUsers(res1.data.results);  
         setCount(res1.data.count);  
     }
+    ////-------------------For admin----------------------//////
+    let is_admin = (localStorage.getItem('is_admin')==='true')
+    const [staff, setStaff] = useState(false);
+    const onCheck = () => setStaff(!staff);
+
     return (
         <div>
             <MDBBtn rounded color="success" className={styles.addbtn} onClick={toggleModal}><MDBIcon icon="plus-circle" />&nbsp;&nbsp;Add new user</MDBBtn>
@@ -158,13 +173,21 @@ const Users = () => {
                     <tr>
                         <th>id</th>
                         <th>Name</th>
+                        {
+                            is_admin?
+                            <th>Status</th>
+                            :
+                            null
+                        }
                         <th>Email</th>
                         <th>Action</th>
                     </tr>
                 </MDBTableHead>
                 <MDBTableBody>
-                    {users.map(user => {
-                        return (<tr>
+                    {
+                        users !== null?
+                        users.map(user => {
+                            return (<tr>
                             <td>{user.id}</td>
                             <td>
                                 {update !== user.id ?
@@ -173,6 +196,19 @@ const Users = () => {
                                 <input value={updateName} onChange={onChangeName}/>
                                 }
                             </td>
+                            {
+                                is_admin?
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        {update === user.id ?
+                                        <input type="checkbox" className="custom-control-input" id={`defaultUnchecked${user.id}`} checked={staff} name="checked" onChange={onCheck}/>:
+                                        <input type="checkbox" className="custom-control-input disabled" />}
+                                        <label class="custom-control-label" for={`defaultUnchecked`}>Is Staff?</label>
+                                    </div>
+                                </td>
+                                :
+                                null
+                            }
                             <td>
                                 {update !== user.id ?
                                     user.email
@@ -195,7 +231,10 @@ const Users = () => {
                                 }       
                             </td>
                         </tr>)
-                    })}
+                        })
+                        :
+                        ""
+                }
                 </MDBTableBody>
                 <MDBTableFoot>
                     <Pagination 
@@ -226,6 +265,15 @@ const Users = () => {
                                 success="right"
                                 onChange={e => onChange(e)}
                             />
+                            {
+                                is_admin?
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" className="custom-control-input" id='defaultUnchecked' checked={staff} name="checked" onChange={onCheck}/>
+                                    <label class="custom-control-label" for="defaultUnchecked">Is Staff?</label>
+                                </div>
+                                :
+                                null
+                            }
                             <MDBInput
                                 label="User email"
                                 icon="envelope"

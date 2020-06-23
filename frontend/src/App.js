@@ -17,7 +17,6 @@ const App = () => {
       <Router>
         <Layout>
           <Switch>
-            <Route exact path="/" component={Home} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/main" component={MainPage} />

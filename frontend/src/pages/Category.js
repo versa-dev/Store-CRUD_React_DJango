@@ -18,6 +18,7 @@ const Category = ({update_category, set_category}) => {
     const fetchData = async() => {
         try {
             const res = await axios.get('/api/category/', config);
+            console.log(res)
             let pages = res.data.count;
             let all = []
             for (var i = 1; i < pages / 5 + 1; i++){
@@ -52,6 +53,7 @@ const Category = ({update_category, set_category}) => {
             "name":name, "stock":stock };
         try{
             const res = await axios.post('/api/category/', body, config);
+            
             setAddToggle(false)
             const res2 = await axios.get('/api/category/', config);
             let pages = res2.data.count;

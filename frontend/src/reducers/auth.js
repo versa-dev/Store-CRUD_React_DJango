@@ -26,6 +26,10 @@ export default function(state, action){
                 localStorage.setItem('is_staff','true');
             else
                 localStorage.setItem('is_staff','false');
+            if(payload.is_admin)
+                localStorage.setItem('is_admin','true');
+            else 
+                localStorage.setItem('is_admin','false');
             return {
                 ...state,
                 isAuthenticated: true,
@@ -44,6 +48,7 @@ export default function(state, action){
         case LOGOUT:
             localStorage.removeItem('is_staff');
             localStorage.removeItem('token');
+            localStorage.removeItem('is_admin');
             return {
                 ...state,
                 token: null,

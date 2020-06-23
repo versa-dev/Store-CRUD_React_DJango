@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     #third-party
     'corsheaders',
     'rest_framework',
-    
+    'coverage',
     #apps
     'accounts',
     'products',

@@ -17,6 +17,7 @@ const Products = ({ category_id, category_list }) => {
     const addClick = () => { setAddToggle(!addToggle) };
 
     ///--------------- For pagination and display users-------------///
+    const [ totalProduct, setTotalProduct ] = useState([]);
     const [products, setProducts] = useState([]);
     const [count, setCount] = useState(0);
     const [previous, setPrevious] = useState('');
@@ -48,7 +49,8 @@ const Products = ({ category_id, category_list }) => {
                     }
                     all = [].concat.apply([], all);
                     let filtered_products = all.filter(function (el) { return el.category === category_id })
-                    setProducts(filtered_products)
+                    setProducts(filtered_products);
+                    setTotalProduct(all);
                     setCount(filtered_products.length);
                 }
                 setPrevious(res.data.previous);
@@ -144,6 +146,7 @@ const Products = ({ category_id, category_list }) => {
     })
     const { update_name, update_price, update_category, update_description } = updateFormData;
 
+    const [currentPage, setCurrentPage] = useState(0);
     const editClick = (id) => { 
         setEditToggle(id);
         let edit_product = products.filter(function (el) { return el.id === id })[0];
@@ -152,7 +155,7 @@ const Products = ({ category_id, category_list }) => {
             update_price: edit_product.price,
             update_category: edit_product.category,
             update_description: edit_product.description
-        })
+        })     
     };
     
     const onUpdateChange = (e) => setUpdateFormData({
@@ -168,8 +171,9 @@ const Products = ({ category_id, category_list }) => {
             "category": update_category
         }
         const res = await axios.put(`/api/products/${editToggle}/`, body, config);
+        
         setEditToggle(false);
-        const res1 = await axios.get('/api/products/', config);
+        const res1 = await axios.get(`/api/products/?page=${currentPage}`, config);
         setProducts(res1.data.results);
         setCount(res1.data.count);
     }
@@ -179,7 +183,7 @@ const Products = ({ category_id, category_list }) => {
             <MDBBtn> {count} Products</MDBBtn>
             <MDBBtn onClick={addClick}><MDBIcon icon="plus-circle" /> Add New Product </MDBBtn>
             {
-                addToggle ?
+                    addToggle ?
                     <form>
                         <MDBInput label="Product Name" name="name" value={name} onChange={e => onChange(e)} outline />
                         <MDBInput label="Price" name="price" value={price} onChange={e => onChange(e)} outline />
@@ -212,53 +216,56 @@ const Products = ({ category_id, category_list }) => {
                 setActive={setActive}
             />
             {
-                products.map(producut => {
-                    return (
-                        <div>
-                            {
-                                    producut.id !== editToggle ?
-                                    <MDBCard key={producut.id} className={styles.card_item}>
-                                        <MDBCardTitle>{producut.name}
-                                            <MDBBadge pill color="info" className={styles.badge_item}>${producut.price}</MDBBadge>
+                products !== null?
+                    products.map((product) => {
+                        return (
+                            <div>
+                                {
+                                    product.id !== editToggle ?
+                                        <MDBCard key={product.id} className={styles.card_item}>
+                                        <MDBCardTitle>{product.name}
+                                            <MDBBadge pill color="info" className={styles.badge_item}>${product.price}</MDBBadge>
                                         </MDBCardTitle>
                                         <MDBCardText>
                                             <MDBRow>
                                                 <MDBCol>
-                                                    {producut.description}
+                                                    {product.description}
                                                 </MDBCol>
                                                 <MDBCol>
                                                     <Fragment className={styles.btngroup}>
-                                                        <MDBBtn color="success" className={styles.editbtn} onClick={()=>onRemove(producut.id)}>Remove</MDBBtn>
-                                                        <MDBBtn color="secondary" className={styles.editbtn} onClick={() => editClick(producut.id)}>Edit</MDBBtn>
+                                                        <MDBBtn color="success" className={styles.editbtn} onClick={()=>onRemove(product.id)}>Remove</MDBBtn>
+                                                        <MDBBtn color="secondary" className={styles.editbtn} onClick={() => editClick(product.id)}>Edit</MDBBtn>
                                                     </Fragment>
                                                 </MDBCol>
                                             </MDBRow>
                                         </MDBCardText>
                                     </MDBCard>
                                     :
-                                    <form>
-                                        <MDBInput label="Product Name" outline value={update_name} name="update_name" onChange={onUpdateChange} />
-                                        <MDBInput label="Price" outline value={update_price} name="update_price" onChange={onUpdateChange} />
-                                        <select className="browser-default custom-select" value={update_category} name="update_category" onChange={onUpdateChange}>
-                                            <option>Category</option>
-                                            {
-                                                category_list.map(category => {
-                                                    return (
-                                                        <option value={`${category.id}`}>{category.name}</option>
-                                                    )
-                                                })
-                                            }
-                                        </select>
-                                        <MDBInput type="textarea" label="Description" outline value={update_description} name="update_description" onChange={onUpdateChange}/>
-                                        <MDBRow className={styles.addrow}>
-                                            <MDBBtn color="warning" className={styles.editbtn} onClick={onUpdate}><MDBIcon far icon="save" /> Update</MDBBtn>
-                                            <MDBBtn color="danger" className={styles.editbtn} onClick={() => setEditToggle(0)}><MDBIcon icon="undo" /> Cancel</MDBBtn>
-                                        </MDBRow>
-                                    </form>
-                            }
-                        </div>
-                    )
-                })
+                                        <form>
+                                            <MDBInput label="Product Name" outline value={update_name} name="update_name" onChange={onUpdateChange} />
+                                            <MDBInput label="Price" outline value={update_price} name="update_price" onChange={onUpdateChange} />
+                                            <select className="browser-default custom-select" value={update_category} name="update_category" onChange={onUpdateChange}>
+                                                <option>Category</option>
+                                                {
+                                                    category_list.map(category => {
+                                                        return (
+                                                            <option value={`${category.id}`}>{category.name}</option>
+                                                        )
+                                                    })
+                                                }
+                                            </select>
+                                            <MDBInput type="textarea" label="Description" outline value={update_description} name="update_description" onChange={onUpdateChange}/>
+                                            <MDBRow className={styles.addrow}>
+                                                <MDBBtn color="warning" className={styles.editbtn} onClick={onUpdate}><MDBIcon far icon="save" /> Update</MDBBtn>
+                                                <MDBBtn color="danger" className={styles.editbtn} onClick={() => setEditToggle(0)}><MDBIcon icon="undo" /> Cancel</MDBBtn>
+                                            </MDBRow>
+                                        </form>
+                                }
+                            </div>
+                        )
+                    })
+                :
+                ""
             }
         </div>
     )
