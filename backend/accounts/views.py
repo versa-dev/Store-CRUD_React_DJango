@@ -27,9 +27,15 @@ class SignupView(APIView):
                 return Response({'error':'email already exists'})
             else:
                 if len(password)<6:
-                    return Response({'error':'Password must be at least 6 characters'})
+                    return Response({
+                        'error':'Password must be at least 6 characters'
+                        })
                 else:
-                    user = User.objects.create_user(email=email,password=password,name=name)
+                    user = User.objects.create_user(
+                        email=email,
+                        password=password,
+                        name=name
+                    )
                     user.save()
 
                     return Response({'success':'User created successfully'})
@@ -73,9 +79,16 @@ class AccountListView(APIView, PageNumberPagination):
                 return Response({'error':'email already exists'})
             else:
                 if len(password)<6:
-                    return Response({'error':'Password must be at least 6 characters'})
+                    return Response({
+                        'error':'Password must be at least 6 characters'
+                        })
                 else:
-                    user = User.objects.create_user(email=email,password=password,name=name, is_staff=is_staff)
+                    user = User.objects.create_user(
+                        email=email,
+                        password=password,
+                        name=name, 
+                        is_staff=is_staff
+                    )
                     user.save()
 
                     return Response({'success':'User created successfully'})
